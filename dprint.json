@@ -1,0 +1,9 @@
+{
+  "json": {},
+  "markdown": {
+    "textWrap": "always"
+  },
+  "excludes": ["**/*-lock.json"],
+  "plugins": ["npm:@dprint/json@0.26.0", "npm:@dprint/markdown@0.29.0"],
+  "lineWidth": 80
+}

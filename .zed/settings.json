@@ -1,0 +1,17 @@
+{
+  "formatter": {
+    "external": {
+      "command": "dprint",
+      "arguments": ["fmt", "--stdin", "{buffer_path}"],
+    },
+  },
+  "hard_tabs": true,
+
+  "languages": {
+    "Markdown": {
+      "language_servers": ["dprint", "..."],
+    },
+  },
+
+  "soft_wrap": "none",
+}
