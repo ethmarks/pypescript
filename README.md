@@ -5,7 +5,7 @@ PypeScript is a language that transpiles to JavaScript and uses pipes.
 ## About
 
 Did you know that
-[JavaScript will get a pipe operator](https://github.com/tc39/proposal-pipeline-operator).
+[JavaScript will get a pipe operator](https://github.com/tc39/proposal-pipeline-operator)?
 Well, eventually. It's been over a decade, and JavaScript still has zero pipes.
 In an attempt to restore balance to the universe, PypeScript is a language which
 is _only_ pipes, which are called "pypes".
@@ -45,6 +45,7 @@ $doubleAndPrint <| {
 }
 
 $num |> $doubleAndPrint |> $numReturnedByTheTankIdk
+$numReturnedByTheTankIdk |> print
 ```
 
 PypeScript's syntax is a little different from C-like languages. I'm just going
@@ -56,8 +57,8 @@ to explain the major differences from something like JavaScript.
 >
 > -- Commandment #1, _The Way of the Pype_
 
-Though it may be surprising, pypes are rather important in PypeScript. They do
-everything from storing variables, invoking functions, and moving data around.
+Pypes are rather important in PypeScript. Shocking, I know. Pypes do everything
+from storing variables, invoking functions, and moving data around.
 
 Pypes are fairly simple to understand. `5 |> print` takes `5` and applies it to
 `print`. That's all there is to it. `5 |> increment |> increment |> print`
