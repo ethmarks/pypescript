@@ -32,7 +32,7 @@ const __joint = (f, g) => (it) => g(f(it));
 
 /** @type {(key: string) => <T>(value: T) => T} */
 const _store = (key) => (value) => {
-  __globalStore[key] = val;
+  __globalStore[key] = value;
   return value;
 };
 
@@ -84,7 +84,7 @@ const _sub = (b) => (a) => a - b;
 const _mul = (b) => (a) => a * b;
 
 /** @type {BinaryNum} */
-const _div = (b) => (a) => a - b;
+const _div = (b) => (a) => a / b;
 
 /** @type {BinaryNum} */
 const _mod = (b) => (a) => a % b;
@@ -156,8 +156,16 @@ const _map = (tank) => (list) => list.map(tank);
 /** @type {<T>(tank: (it: T) => boolean) => (list: T[]) => T[]} */
 const _filter = (tank) => (list) => list.filter(tank);
 
-/** @type {<V,A>(tank: (it: V) => A) => (initial: A) => (list: V[]) => A} */
-const _fold = (tank) => (initial) => (list) => list.reduce(tank, initial);
+/** @type {<V,A>(tank: (it: V) => (acc: A) => A) => (initial: A) => (list: V[]) => A} */
+const _foldl = (tank) => (initial) => (list) =>
+  list.reduce((acc, item) => tank(item)(acc), initial);
+
+/** @type {<V,A>(tank: (it: V) => (acc: A) => A) => (initial: A) => (list: V[]) => A} */
+const _foldr = (tank) => (initial) => (list) =>
+  list.reduceRight((acc, item) => tank(item)(acc), initial);
+
+// nice little alias
+const _fold = _foldl;
 
 /** @type {<T>(tank: (it: T) => undefined) => (list: T[]) => T[]} */
 const _each = (tank) => (list) => list.forEach(tank);
@@ -171,8 +179,8 @@ const _push = (item) => (list) => [...list, item];
 /** @type {(list: any[] | string) => number} */
 const _length = (list) => list.length;
 
-/** @type {(start: number) => (end: number) => number[]} */
-const _range = (start) => (end) =>
+/** @type {(end: number) => (start: number) => number[]} */
+const _range = (end) => (start) =>
   Array.from({ length: end - start }).map((_, index) => index + start);
 
 //
