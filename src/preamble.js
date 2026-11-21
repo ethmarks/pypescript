@@ -107,3 +107,60 @@ const _or = (b) => (a) => a || b;
  */
 const _if = (onTrue) => (onFalse) => (condition) =>
   condition ? onTrue : onFalse;
+
+/** @type {<T>(tank: (it: undefined) => T) => (condition: boolean) => undefined | T} */
+const _when =
+  (tank) => (condition) => (condition ? tank(undefined) : undefined);
+
+/** @type {(tank: (it: number) => undefined) => (count: number) => undefined} */
+const _repeat = (tank) => (count) => {
+  for (let i = 0; i < count; i++) tank(i);
+};
+
+//
+// LIST STUFF
+//
+
+/** @type {<O,N>(tank: (it: O) => N) => (list: O[]) => N[]} */
+const _map = (tank) => (list) => list.map(tank);
+
+/** @type {<T>(tank: (it: T) => boolean) => (list: T[]) => T[]} */
+const _filter = (tank) => (list) => list.filter(tank);
+
+/** @type {<V,A>(tank: (it: V) => A) => (initial: A) => (list: V[]) => A} */
+const _fold = (tank) => (initial) => (list) => list.reduce(tank, initial);
+
+/** @type {<T>(tank: (it: T) => undefined) => (list: T[]) => T[]} */
+const _each = (tank) => (list) => list.forEach(tank);
+
+/** @type {(index: number) => <T>(list: T[]) => T} */
+const _get = (index) => (list) => list[index];
+
+/** @type {<T>(item: T) => (list: T[]) => T} */
+const _push = (item) => (list) => [...list, item];
+
+/** @type {(list: any[] | string) => number} */
+const _length = (list) => list.length;
+
+/** @type {(start: number) => (end: number) => number[]} */
+const _range = (start) => (end) =>
+  Array.from({ length: end - start }).map((_, index) => index + start);
+
+//
+// STRING STUFF
+//
+
+/** @type {(separator: string) => (str: string) => string[]} */
+const _split = (separator) => (str) => str.split(separator);
+
+/** @type {(separator: string) => (list: string[]) => string} */
+const _join = (separator) => (list) => list.join(separator);
+
+/** @type {(str: string) => string} */
+const _trim = (str) => str.trim();
+
+/** @type {(str: string) => string} */
+const _upper = (str) => str.toUpperCase();
+
+/** @type {(val: any) => string} */
+const _stringify = (val) => val.toString();
