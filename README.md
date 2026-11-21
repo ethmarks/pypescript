@@ -37,14 +37,14 @@ Here's an example of some PypeScript code:
 ```pype
 5 |> $num
 
-$doubleAndLog <| {
+$doubleAndPrint <| {
 	2 |> mul |> $doubler
 	it |> $doubler |> $numButDoubled
-	$numButDoubled |> log
+	$numButDoubled |> print
 	$numButDoubled |> that
 }
 
-$num |> $doubleAndLog |> $numReturnedByTheTankIdk
+$num |> $doubleAndPrint |> $numReturnedByTheTankIdk
 ```
 
 PypeScript's syntax is a little different from C-like languages. I'm just going
@@ -59,17 +59,17 @@ to explain the major differences from something like JavaScript.
 Though it may be surprising, pypes are rather important in PypeScript. They do
 everything from storing variables, invoking functions, and moving data around.
 
-Pypes are fairly simple to understand. `5 |> log` takes `5` and applies it to
-`log`. That's all there is to it. `5 |> increment |> increment |> log` evaluates
-left-to-right, pyping 5 into increment, then into another increment, and then
-logging the resulting 7.
+Pypes are fairly simple to understand. `5 |> print` takes `5` and applies it to
+`print`. That's all there is to it. `5 |> increment |> increment |> print`
+evaluates left-to-right, pyping 5 into increment, then into another increment,
+and then printing the resulting 7.
 
 Backpypes are just syntactic sugar for pypes that go in the other direction. For
-example: `log <| 5`. They do have one quirk, though: they have very low operator
-precedence, so you can imagine that it puts parentheses around both sides of it,
-so everything on either side has to finish before it acts. `log <| 5 |> (1 |>
-add)` will evaluate `5 |> (1 |> add)` before pyping into `log`, even though the
-backpype comes first.
+example: `print <| 5`. They do have one quirk, though: they have very low
+operator precedence, so you can imagine that it puts parentheses around both
+sides of it, so everything on either side has to finish before it acts. `print
+<| 5 |> (1 |> add)` will evaluate `5 |> (1 |> add)` before pyping into `print`,
+even though the backpype comes first.
 
 ### Valves
 
@@ -116,7 +116,7 @@ control flow.
 
 On the usage side, this eliminates the need to specify argument order, which
 means there's no need to use parentheses to call a tank. Just pype the value
-directly into the tank, like so: `5 |> log`.
+directly into the tank, like so: `5 |> print`.
 
 To write a tank, just use curly braces, like so: `{ it |> (5 |> add) |> that }`.
 Tanks are just JavaScript functions behind the scenes, so they're first-class
@@ -147,7 +147,7 @@ into a valve: `{ it |> (5 |> add) |> that } |> $addFive`.
 > }
 >
 > % Hi Ethan! Your number is 42
-> "Ethan" |> (42 |> $greet) |> log
+> "Ethan" |> (42 |> $greet) |> print
 > ```
 
 ### Joints
@@ -180,13 +180,3 @@ $pypeline
 >> $executeArgs 
 >> $formatResult
 ```
-
-## Builtins
-
-PypeScript has a bunch of built-in tanks which let you do stuff. They follow the
-same rules as user-defined tanks; the only difference is that you don't need a
-valve to access them.
-
-### Core
-
-- `store`:
