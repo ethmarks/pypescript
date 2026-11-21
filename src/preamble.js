@@ -7,6 +7,7 @@
 
 const __globalStore = Object.create(null);
 
+/** @type {(key: string) => (val: any) => any} */
 const __valve = (key) => (val) => {
   if (key in __globalStore && typeof __globalStore[key] === "function") {
     return __globalStore[key](val);
@@ -14,12 +15,16 @@ const __valve = (key) => (val) => {
   return _store(key)(val);
 };
 
+/** @type {(key: string) => any} */
 const __read = (key) => {
   if (!(key in __globalStore)) {
     throw new Error(`Tried to pype out of empty valve '$${key}'`);
   }
   return __globalStore[key];
 };
+
+/** @type {<IT, IR, THAT>(f: (it: IT) => IR, g: (it: IR) => THAT) => (it: IT) => THAT} */
+const __joint = (f, g) => (it) => g(f(it));
 
 //
 // CORE STUFF
