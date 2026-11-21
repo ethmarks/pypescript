@@ -4,6 +4,10 @@
     "textWrap": "always"
   },
   "excludes": ["**/*-lock.json"],
-  "plugins": ["npm:@dprint/json@0.26.0", "npm:@dprint/markdown@0.29.0"],
+  "plugins": [
+    "npm:@dprint/json@0.26.0",
+    "npm:@dprint/markdown@0.29.0",
+    "npm:@dprint/typescript@0.101.0"
+  ],
   "lineWidth": 80
 }
