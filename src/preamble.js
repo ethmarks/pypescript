@@ -2,11 +2,32 @@
 // builtins and internals.
 
 //
+// INTERNALS
+//
+
+const __globalStore = Object.create(null);
+
+const __valve = (key) => (val) => {
+  if (key in __globalStore && typeof __globalStore[key] === "function") {
+    return __globalStore[key](val);
+  }
+  return _store(key)(val);
+};
+
+const __read = (key) => {
+  if (!(key in __globalStore)) {
+    throw new Error(`Tried to pype out of empty valve '$${key}'`);
+  }
+  return __globalStore[key];
+};
+
+//
 // CORE STUFF
 //
 
 /** @type {(key: string) => <T>(value: T) => T} */
 const _store = (key) => (value) => {
+  __globalStore[key] = val;
   return value;
 };
 
@@ -37,9 +58,12 @@ const _increment = (x) => x + 1;
 /** @type {UnaryNum} */
 const _decrement = (x) => x - 1;
 
-const _round = Math.round;
-const _floor = Math.floor;
-const _ceil = Math.ceil;
+/** @type {UnaryNum} */
+const _round = (x) => Math.round(x);
+/** @type {UnaryNum} */
+const _floor = (x) => Math.floor(x);
+/** @type {UnaryNum} */
+const _ceil = (x) => Math.ceil(x);
 
 /**
  * Add gets a special type because it can do strings too
