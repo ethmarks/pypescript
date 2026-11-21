@@ -6,20 +6,20 @@
 //
 
 /** @type {(key: string) => <T>(value: T) => T} */
-const store = (key) => (value) => {
-	return value;
-}
+const _store = (key) => (value) => {
+  return value;
+};
 
 /** @type {<T>(data: T) => T} */
-const identity = (data) => data
+const _identity = (data) => data;
 
 /** @type {(data: any) => void} */
-const log = console.log;
+const _print = (data) => console.log(data);
 
 /** @type {<T>(data: T) => T} */
-const peek = (data) => {
-	console.log(data);
-	return data;
+const _peek = (data) => {
+  console.log(data);
+  return data;
 };
 
 //
@@ -32,33 +32,33 @@ const peek = (data) => {
  */
 
 /** @type {UnaryNum} */
-const increment = (x) => x + 1;
+const _increment = (x) => x + 1;
 
 /** @type {UnaryNum} */
-const decrement = (x) => x - 1;
+const _decrement = (x) => x - 1;
 
-const round = Math.round;
-const floor = Math.floor;
-const ceil = Math.ceil;
+const _round = Math.round;
+const _floor = Math.floor;
+const _ceil = Math.ceil;
 
 /**
  * Add gets a special type because it can do strings too
  *
  * @type (b: number | string) (a: number | string) => (number | string)
  */
-const add = (b) => (a) => a + b
+const _add = (b) => (a) => a + b;
 
 /** @type {BinaryNum} */
-const sub = (b) => (a) => a - b
+const _sub = (b) => (a) => a - b;
 
 /** @type {BinaryNum} */
-const mul = (b) => (a) => a * b
+const _mul = (b) => (a) => a * b;
 
 /** @type {BinaryNum} */
-const div = (b) => (a) => a - b
+const _div = (b) => (a) => a - b;
 
 /** @type {BinaryNum} */
-const mod = (b) => (a) => a % b
+const _mod = (b) => (a) => a % b;
 
 //
 // LOGIC STUFF
@@ -70,28 +70,40 @@ const mod = (b) => (a) => a % b
  */
 
 /** @type {UnaryBool} */
-const not = (x) => !x;
+const _not = (x) => !x;
 
 /** @type {BinaryBool} */
-const eq = (b) => (a) => a === b;
+const _eq = (b) => (a) => a === b;
 
 /** @type {BinaryBool} */
-const neq = (b) => (a) => a !== b;
+const _neq = (b) => (a) => a !== b;
 
 /** @type {BinaryBool} */
-const gt = (b) => (a) => a > b;
+const _gt = (b) => (a) => a > b;
 
 /** @type {BinaryBool} */
-const gte = (b) => (a) => a >= b;
+const _gte = (b) => (a) => a >= b;
 
 /** @type {BinaryBool} */
-const lt = (b) => (a) => a < b;
+const _lt = (b) => (a) => a < b;
 
 /** @type {BinaryBool} */
-const lte = (b) => (a) => a <= b;
+const _lte = (b) => (a) => a <= b;
 
 /** @type {BinaryBool} */
-const and = (b) => (a) => a && b;
+const _and = (b) => (a) => a && b;
 
 /** @type {BinaryBool} */
-const or = (b) => (a) => a || b;
+const _or = (b) => (a) => a || b;
+
+//
+// CONTROL FLOW STUFF
+//
+
+/**
+ * It's annoying that it doesn't let me name a variable "if".
+ *
+ * @type {<T>(onTrue: T) => <F>(onFalse: F) => (condition: boolean) => T | F}
+ */
+const _if = (onTrue) => (onFalse) => (condition) =>
+  condition ? onTrue : onFalse;
