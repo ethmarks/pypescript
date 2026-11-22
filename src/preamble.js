@@ -148,9 +148,9 @@ export const cond = (onTrue) => (onFalse) => (condition) =>
 export const branch = (onTrue) => (onFalse) => (condition) =>
   condition ? onTrue(undefined) : onFalse(undefined);
 
-/** @type {<V,T,F>(onTrue: (it: V) => T) => (onFalse: (it: V) => F) => (condition: boolean) => (val: V) => T | F} */
-export const branchWith = (onTrue) => (onFalse) => (condition) => (val) =>
-  condition ? onTrue(val) : onFalse(val);
+/** @type {<V,T,F>(onTrue: (it: V) => T) => (onFalse: (it: V) => F) => (predicate: (it: V) => boolean) => (val: V) => T | F} */
+export const branchWith = (onTrue) => (onFalse) => (predicate) => (val) =>
+  predicate(val) ? onTrue(val) : onFalse(val);
 
 /** @type {<T>(tank: (it: undefined) => T) => (condition: boolean) => undefined | T} */
 export const when =
