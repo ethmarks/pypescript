@@ -86,8 +86,8 @@ To write a valve, just prefix the name of the valve with a `$`, like so: `$num`.
 
 If you pype a value into a valve, one of two things can happen:
 
-1. If the valve is currently storing a tank (basically a function), that value
-   will be pyped into the tank.
+1. If the valve is currently storing a [tank](#tanks), that value will be pyped
+   into the tank.
 2. In literally any other case, the value will be stored in the valve.
 
 > [!NOTE]
@@ -120,9 +120,9 @@ means there's no need to use parentheses to call a tank. Just pype the value
 directly into the tank, like so: `5 |> print`.
 
 To write a tank, just use curly braces, like so: `{ it |> (5 |> add) |> that }`.
-Tanks are just JavaScript functions behind the scenes, so they're first-class
-values just like in JS. To store a tank for reuse, just pype the whole thing
-into a valve: `{ it |> (5 |> add) |> that } |> $addFive`.
+Tanks are just JavaScript arrow functions behind the scenes, so they're
+first-class values just like in JS. To store a tank for reuse, just pype the
+whole thing into a valve: `{ it |> (5 |> add) |> that } |> $addFive`.
 
 > [!NOTE]
 >
@@ -211,10 +211,10 @@ $fib
 <| (1 |> lte)
 ```
 
-In the first bit, I set up a backpype into the `$fib` valve, which is where the
-main tank will be stored. The first step of the pypeline is a conditional that
-checks if an input is less than or equal to 1. `lte` is a curried function, so
-it's still waiting for one more input before it evaluates.
+In the first bit, I set up a backpype into the `$fib` valve. The first step of
+the pypeline is a conditional that checks if an input is less than or equal
+to 1. `lte` is a curried builtin, so it's still waiting for one more input
+before it evaluates.
 
 ```pype
 |> (
@@ -227,12 +227,12 @@ it's still waiting for one more input before it evaluates.
 ```
 
 This is the bulk of the tank's logic. Notice towards the end that the last step
-is `branchWith`. `branchWith` is a curried function which inputs an onTrue tank,
-an onFalse tank, and a predicate tank (in that order), and outputs a function
-which takes an input, then applies it to either the onTrue or onFalse tank,
-depending on whether the predicate returns true or false.
+is `branchWith`. `branchWith` is a curried builtin which inputs an onTrue tank,
+an onFalse tank, and a predicate tank (in that order), and outputs a tank which
+takes an input, then applies it to either the onTrue or onFalse tank, depending
+on whether the predicate returns true or false.
 
-In this case, the onTrue tank is `identity`, which is a function which just
+In this case, the onTrue tank is `identity`, which is a builtin which just
 returns whatever input you give it. The onFalse tank adds together the result of
 `$fib` with n-1 and n-2. And remember that the predicate is the `(1 |> lte)`
 from earlier.
