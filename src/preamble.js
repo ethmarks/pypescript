@@ -19,14 +19,6 @@ export const __valve = (key, val) => {
   return store(key)(val);
 };
 
-/** @type {(key: string) => any} */
-export const __read = (key) => {
-  if (!(key in __globalStore)) {
-    throw new Error(`Tried to pype out of empty valve '$${key}'`);
-  }
-  return __globalStore[key];
-};
-
 /** @type {<IT, IR, THAT>(f: (it: IT) => IR, g: (it: IR) => THAT) => (it: IT) => THAT} */
 export const __joint = (f, g) => (it) => g(f(it));
 
@@ -38,6 +30,14 @@ export const __joint = (f, g) => (it) => g(f(it));
 export const store = (key) => (value) => {
   __globalStore[key] = value;
   return value;
+};
+
+/** @type {(key: string) => any} */
+export const read = (key) => {
+  if (!(key in __globalStore)) {
+    throw new Error(`Tried to pype out of empty valve '$${key}'`);
+  }
+  return __globalStore[key];
 };
 
 /** @type {<T>(data: T) => T} */
