@@ -32,7 +32,7 @@ And here's the syntax that it _does_ have:
 
 ## Guide
 
-Here's an example of some PypeScript code:
+Here's a simple example of some PypeScript code:
 
 ```pype
 5 |> $num
@@ -180,4 +180,92 @@ $pypeline
 >> $validateArgs 
 >> $executeArgs 
 >> $formatResult
+```
+
+## Example
+
+Here's a more complex example, which calculates the first 20 fibonacci numbers:
+
+```pype
+$fib
+<| (1 |> lte)
+|> (
+	{ that
+		<| (it |> (1 |> sub) |> $fib)
+		|> ((it |> (2 |> sub) |> $fib) |> add)
+	}
+	|> (identity |> branchWith)
+)
+
+% 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181
+(0 |> (20 |> range))
+|> ($fib >> stringify |> map)
+|> (", " |> join)
+|> print
+```
+
+Don't worry, I'll walk you through each section.
+
+```pype
+$fib
+<| (1 |> lte)
+```
+
+In the first bit, I set up a backpype into the `$fib` valve, which is where the
+main tank will be stored. The first step of the pypeline is a conditional that
+checks if an input is less than or equal to 1. `lte` is a curried function, so
+it's still waiting for one more input before it evaluates.
+
+```pype
+|> (
+	{ that
+		<| (it |> (1 |> sub) |> $fib)
+		|> ((it |> (2 |> sub) |> $fib) |> add)
+	}
+	|> (identity |> branchWith)
+)
+```
+
+This is the bulk of the tank's logic. Notice towards the end that the last step
+is `branchWith`. `branchWith` is a curried function which inputs an onTrue tank,
+an onFalse tank, and a predicate tank (in that order), and outputs a function
+which takes an input, then applies it to either the onTrue or onFalse tank,
+depending on whether the predicate returns true or false.
+
+In this case, the onTrue tank is `identity`, which is a function which just
+returns whatever input you give it. The onFalse tank adds together the result of
+`$fib` with n-1 and n-2. And remember that the predicate is the `(1 |> lte)`
+from earlier.
+
+```pype
+% 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181
+(0 |> (20 |> range))
+|> ($fib >> stringify |> map)
+|> (", " |> join)
+|> print
+```
+
+This is the main pypeline. `(0 |> (20 |> range))` generates a list of all
+integers from 0 to 20 (technically 0 to 19 since the endpoint isn't included).
+Then that list is pyped into a map. The tank that I pype into the map is a joint
+of `$fib >> stringify`, or in other words 'run the input through fib, then
+stringify it'. Then that mapped list is pyped into `(", " |> join)`, which just
+joins each element with commas. And finally, the result is printed.
+
+For context, here's a semi-literal translation of the code into JavaScript (it's
+a bit different structurally, because vanilla JS doesn't have anything like
+`branchWith`):
+
+```js
+function fib(it) {
+  return (it <= 1)
+    ? it
+    : fib(it - 1) + fib(it - 2);
+}
+
+console.log(
+  [...Array(20).keys()]
+    .map((n) => fib(n).toString())
+    .join(", "),
+);
 ```

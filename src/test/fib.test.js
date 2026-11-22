@@ -30,3 +30,15 @@ _.__valve(
 _.print(
   _.join(", ")(_.map(_.__joint(_.read("fib"), _.stringify))(_.range(20)(0))),
 );
+
+function fib(it) {
+  return (it <= 1)
+    ? it
+    : fib(it - 1) + fib(it - 2);
+}
+
+console.log(
+  [...Array(20).keys()]
+    .map((n) => fib(n).toString())
+    .join(", "),
+);
