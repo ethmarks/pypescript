@@ -77,7 +77,7 @@ export const ceil = (x) => Math.ceil(x);
 /**
  * Add gets a special type because it can do strings too
  *
- * @type (b: number | string) (a: number | string) => (number | string)
+ * @type {(b: number | string) => (a: number | string) => (number | string)}
  */
 export const add = (b) => (a) => a + b;
 
@@ -100,15 +100,16 @@ export const mod = (b) => (a) => a % b;
 /**
  * @typedef {(x: boolean) => boolean} UnaryBool
  * @typedef {(a: boolean) => (b: boolean) => boolean} BinaryBool
+ * @typedef {(a: any) => (b: any) => boolean} BinaryAny
  */
 
 /** @type {UnaryBool} */
 export const not = (x) => !x;
 
-/** @type {BinaryBool} */
+/** @type {BinaryAny} */
 export const eq = (b) => (a) => a === b;
 
-/** @type {BinaryBool} */
+/** @type {BinaryAny} */
 export const neq = (b) => (a) => a !== b;
 
 /** @type {BinaryBool} */
@@ -171,13 +172,13 @@ export const foldr = (tank) => (initial) => (list) =>
 // nice little alias
 export const fold = foldl;
 
-/** @type {<T>(tank: (it: T) => undefined) => (list: T[]) => T[]} */
+/** @type {<T>(tank: (it: T) => undefined) => (list: T[]) => undefined} */
 export const each = (tank) => (list) => list.forEach(tank);
 
 /** @type {(index: number) => <T>(list: T[]) => T} */
 export const get = (index) => (list) => list[index];
 
-/** @type {<T>(item: T) => (list: T[]) => T} */
+/** @type {<T>(item: T) => (list: T[]) => T[]} */
 export const push = (item) => (list) => [...list, item];
 
 /** @type {(list: any[] | string) => number} */
