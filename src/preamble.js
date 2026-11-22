@@ -16,7 +16,7 @@ export const __valve = (key, val) => {
   if (key in __globalStore && typeof __globalStore[key] === "function") {
     return __globalStore[key](val);
   }
-  return _store(key)(val);
+  return store(key)(val);
 };
 
 /** @type {(key: string) => any} */
@@ -35,19 +35,19 @@ export const __joint = (f, g) => (it) => g(f(it));
 //
 
 /** @type {(key: string) => <T>(value: T) => T} */
-export const _store = (key) => (value) => {
+export const store = (key) => (value) => {
   __globalStore[key] = value;
   return value;
 };
 
 /** @type {<T>(data: T) => T} */
-export const _identity = (data) => data;
+export const identity = (data) => data;
 
 /** @type {(data: any) => void} */
-export const _print = (data) => console.log(data);
+export const print = (data) => console.log(data);
 
 /** @type {<T>(data: T) => T} */
-export const _peek = (data) => {
+export const peek = (data) => {
   console.log(data);
   return data;
 };
@@ -62,36 +62,36 @@ export const _peek = (data) => {
  */
 
 /** @type {UnaryNum} */
-export const _increment = (x) => x + 1;
+export const increment = (x) => x + 1;
 
 /** @type {UnaryNum} */
-export const _decrement = (x) => x - 1;
+export const decrement = (x) => x - 1;
 
 /** @type {UnaryNum} */
-export const _round = (x) => Math.round(x);
+export const round = (x) => Math.round(x);
 /** @type {UnaryNum} */
-export const _floor = (x) => Math.floor(x);
+export const floor = (x) => Math.floor(x);
 /** @type {UnaryNum} */
-export const _ceil = (x) => Math.ceil(x);
+export const ceil = (x) => Math.ceil(x);
 
 /**
  * Add gets a special type because it can do strings too
  *
  * @type (b: number | string) (a: number | string) => (number | string)
  */
-export const _add = (b) => (a) => a + b;
+export const add = (b) => (a) => a + b;
 
 /** @type {BinaryNum} */
-export const _sub = (b) => (a) => a - b;
+export const sub = (b) => (a) => a - b;
 
 /** @type {BinaryNum} */
-export const _mul = (b) => (a) => a * b;
+export const mul = (b) => (a) => a * b;
 
 /** @type {BinaryNum} */
-export const _div = (b) => (a) => a / b;
+export const div = (b) => (a) => a / b;
 
 /** @type {BinaryNum} */
-export const _mod = (b) => (a) => a % b;
+export const mod = (b) => (a) => a % b;
 
 //
 // LOGIC STUFF
@@ -103,31 +103,31 @@ export const _mod = (b) => (a) => a % b;
  */
 
 /** @type {UnaryBool} */
-export const _not = (x) => !x;
+export const not = (x) => !x;
 
 /** @type {BinaryBool} */
-export const _eq = (b) => (a) => a === b;
+export const eq = (b) => (a) => a === b;
 
 /** @type {BinaryBool} */
-export const _neq = (b) => (a) => a !== b;
+export const neq = (b) => (a) => a !== b;
 
 /** @type {BinaryBool} */
-export const _gt = (b) => (a) => a > b;
+export const gt = (b) => (a) => a > b;
 
 /** @type {BinaryBool} */
-export const _gte = (b) => (a) => a >= b;
+export const gte = (b) => (a) => a >= b;
 
 /** @type {BinaryBool} */
-export const _lt = (b) => (a) => a < b;
+export const lt = (b) => (a) => a < b;
 
 /** @type {BinaryBool} */
-export const _lte = (b) => (a) => a <= b;
+export const lte = (b) => (a) => a <= b;
 
 /** @type {BinaryBool} */
-export const _and = (b) => (a) => a && b;
+export const and = (b) => (a) => a && b;
 
 /** @type {BinaryBool} */
-export const _or = (b) => (a) => a || b;
+export const or = (b) => (a) => a || b;
 
 //
 // CONTROL FLOW STUFF
@@ -138,15 +138,15 @@ export const _or = (b) => (a) => a || b;
  *
  * @type {<T>(onTrue: T) => <F>(onFalse: F) => (condition: boolean) => T | F}
  */
-export const _if = (onTrue) => (onFalse) => (condition) =>
+export const cond = (onTrue) => (onFalse) => (condition) =>
   condition ? onTrue : onFalse;
 
 /** @type {<T>(tank: (it: undefined) => T) => (condition: boolean) => undefined | T} */
-export const _when =
+export const when =
   (tank) => (condition) => (condition ? tank(undefined) : undefined);
 
 /** @type {(tank: (it: number) => undefined) => (count: number) => undefined} */
-export const _repeat = (tank) => (count) => {
+export const repeat = (tank) => (count) => {
   for (let i = 0; i < count; i++) tank(i);
 };
 
@@ -155,36 +155,36 @@ export const _repeat = (tank) => (count) => {
 //
 
 /** @type {<O,N>(tank: (it: O) => N) => (list: O[]) => N[]} */
-export const _map = (tank) => (list) => list.map(tank);
+export const map = (tank) => (list) => list.map(tank);
 
 /** @type {<T>(tank: (it: T) => boolean) => (list: T[]) => T[]} */
-export const _filter = (tank) => (list) => list.filter(tank);
+export const filter = (tank) => (list) => list.filter(tank);
 
 /** @type {<V,A>(tank: (it: V) => (acc: A) => A) => (initial: A) => (list: V[]) => A} */
-export const _foldl = (tank) => (initial) => (list) =>
+export const foldl = (tank) => (initial) => (list) =>
   list.reduce((acc, item) => tank(item)(acc), initial);
 
 /** @type {<V,A>(tank: (it: V) => (acc: A) => A) => (initial: A) => (list: V[]) => A} */
-export const _foldr = (tank) => (initial) => (list) =>
+export const foldr = (tank) => (initial) => (list) =>
   list.reduceRight((acc, item) => tank(item)(acc), initial);
 
 // nice little alias
-export const _fold = _foldl;
+export const fold = foldl;
 
 /** @type {<T>(tank: (it: T) => undefined) => (list: T[]) => T[]} */
-export const _each = (tank) => (list) => list.forEach(tank);
+export const each = (tank) => (list) => list.forEach(tank);
 
 /** @type {(index: number) => <T>(list: T[]) => T} */
-export const _get = (index) => (list) => list[index];
+export const get = (index) => (list) => list[index];
 
 /** @type {<T>(item: T) => (list: T[]) => T} */
-export const _push = (item) => (list) => [...list, item];
+export const push = (item) => (list) => [...list, item];
 
 /** @type {(list: any[] | string) => number} */
-export const _length = (list) => list.length;
+export const length = (list) => list.length;
 
 /** @type {(end: number) => (start: number) => number[]} */
-export const _range = (end) => (start) =>
+export const range = (end) => (start) =>
   Array.from({ length: end - start }).map((_, index) => index + start);
 
 //
@@ -192,16 +192,16 @@ export const _range = (end) => (start) =>
 //
 
 /** @type {(separator: string) => (str: string) => string[]} */
-export const _split = (separator) => (str) => str.split(separator);
+export const split = (separator) => (str) => str.split(separator);
 
 /** @type {(separator: string) => (list: string[]) => string} */
-export const _join = (separator) => (list) => list.join(separator);
+export const join = (separator) => (list) => list.join(separator);
 
 /** @type {(str: string) => string} */
-export const _trim = (str) => str.trim();
+export const trim = (str) => str.trim();
 
 /** @type {(str: string) => string} */
-export const _upper = (str) => str.toUpperCase();
+export const upper = (str) => str.toUpperCase();
 
 /** @type {(val: any) => string} */
-export const _stringify = (val) => val.toString();
+export const stringify = (val) => val.toString();

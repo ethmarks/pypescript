@@ -22,7 +22,7 @@ _.__valve("greet", (it) => {
   return (it) => {
     _.__valve("name", it);
 
-    return _._fold(_._add)("")([
+    return _.fold(_._add)("")([
       "Hi ",
       _.__read("name"),
       "! Your number is ",
@@ -31,4 +31,4 @@ _.__valve("greet", (it) => {
   };
 });
 
-_._print(_.__valve("greet", 42)("Ethan"));
+_.print(_.__valve("greet", 42)("Ethan"));
