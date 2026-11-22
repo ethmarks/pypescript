@@ -22,7 +22,7 @@ _.__valve("greet", (it) => {
   return (it) => {
     _.__valve("name", it);
 
-    return _.fold(_._add)("")([
+    return _.fold(_.add)("")([
       "Hi ",
       _.read("name"),
       "! Your number is ",
