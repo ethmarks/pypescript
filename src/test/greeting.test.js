@@ -6,10 +6,10 @@ $greet <| {
 	that <| {
 		$name <| it
 
-		that <| "Hi "
-		|> ($name |> add)
-		|> ("! Your number is " |> add)
-		|> ($number |> add)
+
+		["Hi ", $name, "! Your number is ", $number]
+		|> ("" |> (add |> fold))
+		|> that
 	}
 }
 
@@ -22,10 +22,13 @@ _.__valve("greet", (it) => {
   return (it) => {
     _.__valve("name", it);
 
-    return _._add(_.__read("number"))(
-      _._add("! Your number is ")(_._add(_.__read("name"))("Hi ")),
-    );
+    return _._fold(_._add)("")([
+      "Hi ",
+      _.__read("name"),
+      "! Your number is ",
+      _.__read("number"),
+    ]);
   };
 });
 
-_._print(_.__read("greet")(42)("Ethan"));
+_._print(_.__valve("greet", 42)("Ethan"));
