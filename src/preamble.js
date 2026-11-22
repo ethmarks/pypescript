@@ -40,6 +40,9 @@ export const read = (key) => {
   return __globalStore[key];
 };
 
+/** @type {<T>(tank: (it: undefined) => T) => T} */
+export const exec = (tank) => tank(undefined);
+
 /** @type {<T>(data: T) => T} */
 export const identity = (data) => data;
 
@@ -134,13 +137,13 @@ export const or = (b) => (a) => a || b;
 // CONTROL FLOW STUFF
 //
 
-/**
- * It's annoying that it doesn't let me name a variable "if".
- *
- * @type {<T>(onTrue: T) => <F>(onFalse: F) => (condition: boolean) => T | F}
- */
+/** @type {<T>(onTrue: T) => <F>(onFalse: F) => (condition: boolean) => T | F} */
 export const cond = (onTrue) => (onFalse) => (condition) =>
   condition ? onTrue : onFalse;
+
+/** @type {<T>(onTrue: (it: undefined) => T) => <F>(onFalse: (it: undefined) => F) => (condition: boolean) => T | F} */
+export const branch = (onTrue) => (onFalse) => (condition) =>
+  condition ? onTrue(undefined) : onFalse(undefined);
 
 /** @type {<T>(tank: (it: undefined) => T) => (condition: boolean) => undefined | T} */
 export const when =
