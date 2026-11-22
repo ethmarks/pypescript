@@ -46,6 +46,9 @@ export const exec = (tank) => tank(undefined);
 /** @type {<T>(data: T) => T} */
 export const identity = (data) => data;
 
+/** @type {<T>(data: T) => (it: undefined) => T} */
+export const thunk = (data) => (it) => data;
+
 /** @type {(data: any) => void} */
 export const print = (data) => console.log(data);
 
@@ -144,6 +147,10 @@ export const cond = (onTrue) => (onFalse) => (condition) =>
 /** @type {<T>(onTrue: (it: undefined) => T) => <F>(onFalse: (it: undefined) => F) => (condition: boolean) => T | F} */
 export const branch = (onTrue) => (onFalse) => (condition) =>
   condition ? onTrue(undefined) : onFalse(undefined);
+
+/** @type {<V,T,F>(onTrue: (it: V) => T) => (onFalse: (it: V) => F) => (condition: boolean) => (val: V) => T | F} */
+export const branchWith = (onTrue) => (onFalse) => (condition) => (val) =>
+  condition ? onTrue(val) : onFalse(val);
 
 /** @type {<T>(tank: (it: undefined) => T) => (condition: boolean) => undefined | T} */
 export const when =
