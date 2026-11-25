@@ -20,15 +20,17 @@ Here are some examples of syntax that PypeScript does _not_ have: `let`,
 `const`, `if`, `else`, `for`, `while`, `function f() {}`, `f()`, `+`, `-`, `=`,
 `===`, et cetera.
 
-And here's the syntax that it _does_ have:
+And here's all of the syntax that it _does_ have:
 
-| Syntax | Name     | Purpose                                         |
-| ------ | -------- | ----------------------------------------------- |
-| `\|>`  | pype     | for pyping                                      |
-| `<\|`  | backpype | for pyping, but the other direction             |
-| `$x`   | valve    | for pyping values in and out of stores          |
-| `{}`   | tank     | the things which are pyped between              |
-| `>>`   | joint    | for composing tanks so you can pype them easier |
+| Syntax          | Name      | Purpose                                         |
+| --------------- | --------- | ----------------------------------------------- |
+| `\|>`           | pype      | for pyping                                      |
+| `<\|`           | backpype  | for pyping, but the other direction             |
+| `$x`            | valve     | for pyping values in and out of stores          |
+| `{}`            | tank      | the things which are pyped between              |
+| `>>`            | joint     | for composing tanks so you can pype them easier |
+| `%`             | comment   | the only thing that isn't a pype                |
+| there's a bunch | built-ins | special tanks to pype between                   |
 
 ## Guide
 
@@ -182,6 +184,121 @@ $pypeline
 >> $formatResult
 ```
 
+## Builtins
+
+Pypescript builtins are just tanks. The only difference between a builtin tank
+and a user-defined tank is that you don't need a valve to access builtin tanks
+(i.e. `5 |> print` instead of `5 |> $print`).
+
+Behind the scenes, builtins are just JavaScript functions which are injected
+into the compiler output before your code. You can see a complete list of all
+builtins and their exact implementations in [`preamble.js`](./src/preamble.js).
+
+### Core
+
+- `store`: Stores a value in a store. The current implementation is
+  globally-scoped, but I plan to make it lexically-scoped eventually. It's a
+  curried binary function; the first argument is the key (`string`), and the
+  second is the value (`any`). It returns the value afterwards, so you can use
+  it in the middle of a pypeline if you want. For storing ordinary values, it's
+  usually more ergonomic to just pype into a valve, but the only way to
+  overwrite a valve which contains a tank is to use `store` directly. Example:
+  `5 |> ("num" |> store)` will store `5` in `$num`, which is equivalent to `5 |>
+  $num`.
+- `read`: Retrieves a value from a store. Like with `store`, it's currently
+  globally-scoped but I intend to make it lexically-scoped eventually. It's a
+  unary function whose only argument is the key (`string`), and it returns the
+  value from that store. If the store is empty, it returns `undefined`. It
+  behaves identically to just pyping out of a valve, so the only reason to use
+  `read` directly is if you're using dynamically-named stores. Example: `"num"
+  |> read |> print` will read the value of `$num` and print it, which is
+  equivalent to `$num |> print`.
+- `exec`: Pypes `undefined` into a tank and returns its output. Useful if you
+  have a tank which doesn't reference its `it` parameter, and you want to
+  execute it for its side-effects or for its output. It's a unary function whose
+  only argument is the tank (`(it: undefined) => any`) to execute. Example: `{5
+  |> that} |> exec |> print`.
+- `print`: Prints the input to the console. Just uses `console.log` behind the
+  scenes.
+- `peek`: Exactly the same as `print`, but it returns the original value, so you
+  can put it in the middle of a pypeline.
+
+### Math
+
+> [!NOTE]
+> Pypescript builtins are always data-last, so for binary operations (e.g.
+> subtraction), you input the right operand (e.g. the
+> [subtrahend](https://www.merriam-webster.com/dictionary/subtrahend)) first and
+> the left operand (e.g. the
+> [minuend](https://www.merriam-webster.com/dictionary/minuend)) second. For
+> example:
+>
+> ```pype
+> % 5 - 3
+> 5 |> (3 |> sub) |> $fiveMinusThree
+>
+> % It helps if you break it into parts
+> 3 |> sub |> $subtractThree
+> 5 |> $subtractThree |> $fiveMinusThree
+> ```
+
+Arithmetic:
+
+- `increment`: Increments x (`number`) by 1. Equal to `1 |> add`.
+- `decrement`: Decrements x (`number`) by 1. Equal to `1 |> sub`.
+- `round`: Rounds x (`number`) to the nearest integer.
+- `floor`: Rounds x (`number`) down to the next-lowest integer.
+- `ceil`: Rounds x (`number`) up to the next-highest integer.
+- `add`: Adds two numbers. Curried binary function, which takes addend b
+  (`number`) first and then augend a (`number`), then performs a + b.
+- `sub`: Subtracts two numbers. Curried binary function, which takes subtrahend
+  b (`number`) first and then minuend a (`number`), then performs a - b.
+- `mul`: Multiplies two numbers. Curried binary function, which takes multiplier
+  b (`number`) first and then multiplicand a (`number`), then performs a * b.
+- `div`: Divides two numbers. Curried binary function, which takes divisor b
+  (`number`) first and then dividend a (`number`), then performs a / b.
+- `mod`: Divides two numbers and returns the remainder. Curried binary function,
+  which takes modulus b (`number`) first and then dividend a (`number`), then
+  performs a % b.
+- `pow`: Exponentiates two numbers. Curried binary function, which takes power b
+  (`number`) first and then base a (`number`), then performs a ** b.
+- `root`: Root of two numbers. Curried binary function, which takes degree b
+  (`number`) first and then radicand a (`number`), then performs a ** (1/b). Use
+  `2 |> root` to take the square root.
+- `log`: Logarithm of two numbers. Curried binary function, which takes argument
+  b (`number`) first and then base a (`number`), then performs log_b(a). Use `10
+  |> log` to take the common logarithm, `2 |> log` to take the binary logarithm,
+  and `"nat" |> log` (or `euler |> exec |> log`) to take the natural logarithm.
+
+Trig:
+
+- `sin`: Sine of x (`number`).
+- `cos`: Cosine of x (`number`).
+- `tan`: Tangent of x (`number`).
+- `asin`: Arcsine of x (`number`).
+- `acos`: Arccosine of x (`number`).
+- `atan`: Arctangent of x (`number`).
+
+Constants:
+
+> [!NOTE]
+> I made the constants be thunks rather than direct `number`s, because I wanted
+> to make it consistent that all builtins are tanks
+
+- `euler`: Thunk which returns Euler's number.
+- `pi`: Thunk which returns pi.
+
+### Control flow
+
+- `identity`: Immediately returns whatever is pyped into it. Equivalent to `{it
+  |> that}`. If you're using `identity`, you'll almost certainly be passing it
+  around rather than pyping directly into it, because it does literally nothing
+  if you just use it in the middle of a pypeline like `5 |> identity |> print`.
+- `thunk`: Converts a value into a [thunk](https://en.wikipedia.org/wiki/Thunk):
+  a tank which doesn't reference its `it` and just returns the original value.
+  If you pair `thunk` with `exec` in a pypeline, they cancel out: `5 |> thunk |>
+  exec |> print`.
+
 ## Example
 
 Here's a more complex example, which calculates the first 20 fibonacci numbers:
@@ -212,9 +329,9 @@ $fib
 ```
 
 In the first bit, I set up a backpype into the `$fib` valve. The first step of
-the pypeline is a conditional that checks if an input is less than or equal
-to 1. `lte` is a curried builtin, so it's still waiting for one more input
-before it evaluates.
+the pypeline is a predicate that checks if an input is less than or equal to 1.
+`lte` is a curried builtin, so it's still waiting for one more input before it
+evaluates.
 
 ```pype
 |> (
