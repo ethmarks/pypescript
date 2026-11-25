@@ -314,11 +314,12 @@ $fib
 	|> (identity |> branchWith)
 )
 
-% 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181
 (0 |> (20 |> range))
 |> ($fib >> stringify |> map)
 |> (", " |> join)
 |> print
+
+% 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181
 ```
 
 Don't worry, I'll walk you through each section.
@@ -355,7 +356,6 @@ returns whatever input you give it. The onFalse tank adds together the result of
 from earlier.
 
 ```pype
-% 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181
 (0 |> (20 |> range))
 |> ($fib >> stringify |> map)
 |> (", " |> join)
