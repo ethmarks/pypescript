@@ -43,12 +43,6 @@ export const read = (key) => {
 /** @type {<T>(tank: (it: undefined) => T) => T} */
 export const exec = (tank) => tank(undefined);
 
-/** @type {<T>(data: T) => T} */
-export const identity = (data) => data;
-
-/** @type {<T>(data: T) => (it: undefined) => T} */
-export const thunk = (data) => (it) => data;
-
 /** @type {(data: any) => void} */
 export const print = (data) => console.log(data);
 
@@ -63,6 +57,7 @@ export const peek = (data) => {
 //
 
 /**
+ * @typedef {() => number} NullaryNum
  * @typedef {(x: number) => number} UnaryNum
  * @typedef {(a: number) => (b: number) => number} BinaryNum
  */
@@ -79,6 +74,19 @@ export const round = (x) => Math.round(x);
 export const floor = (x) => Math.floor(x);
 /** @type {UnaryNum} */
 export const ceil = (x) => Math.ceil(x);
+
+/** @type {UnaryNum} */
+export const sin = (x) => Math.sin(x);
+/** @type {UnaryNum} */
+export const cos = (x) => Math.cos(x);
+/** @type {UnaryNum} */
+export const tan = (x) => Math.tan(x);
+/** @type {UnaryNum} */
+export const asin = (x) => Math.asin(x);
+/** @type {UnaryNum} */
+export const acos = (x) => Math.acos(x);
+/** @type {UnaryNum} */
+export const atan = (x) => Math.atan(x);
 
 /**
  * Add gets a special type because it can do strings too
@@ -98,6 +106,28 @@ export const div = (b) => (a) => a / b;
 
 /** @type {BinaryNum} */
 export const mod = (b) => (a) => a % b;
+
+/** @type {BinaryNum} */
+export const pow = (b) => (a) => a ** b;
+
+/** @type {BinaryNum} */
+export const root = (b) => (a) => b === 2 ? Math.sqrt(a) : a ** (1 / b);
+
+/** @type {(a: number) => (b: number | "nat") => number} */
+export const log = (b) => (a) =>
+  b === "nat"
+    ? Math.log(a)
+    : b === 10
+    ? Math.log10(a)
+    : b === 2
+    ? Math.log2(a)
+    : Math.log(a) / Math.log(b);
+
+/** @type {NullaryNum} */
+export const euler = () => Math.E;
+
+/** @type {NullaryNum} */
+export const pi = () => Math.PI;
 
 //
 // LOGIC STUFF
@@ -139,6 +169,12 @@ export const or = (b) => (a) => a || b;
 //
 // CONTROL FLOW STUFF
 //
+
+/** @type {<T>(data: T) => T} */
+export const identity = (data) => data;
+
+/** @type {<T>(data: T) => (it: undefined) => T} */
+export const thunk = (data) => (it) => data;
 
 /** @type {<T>(onTrue: T) => <F>(onFalse: F) => (condition: boolean) => T | F} */
 export const cond = (onTrue) => (onFalse) => (condition) =>
